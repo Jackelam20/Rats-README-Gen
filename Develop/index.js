@@ -16,18 +16,19 @@ fetchLicenseNames()
         type: "input",
         message: "What is your description?\n",
         name: "description"
-      },
-      {
+      },{
+        type: "input",
+        message: "What is your installation?\n",
+        name: "installation"
+      },{
         type: "input",
         message: "How do you use it?\n",
         name: "usage"
-      },
-      {
+      },{
         type: "input",
         message: "What functions are in the project?\n",
         name: "functions"
-      },
-      {
+      },{
         type: "input",
         message: "Did anyone help you with this project?\n",
         name: "collabs"

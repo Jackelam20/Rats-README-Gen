@@ -77,6 +77,7 @@
 
   return `# ${data.title}
 
+  
   ## Description
   ${data.description}
 
@@ -86,14 +87,15 @@
   - [Credits](#credits)
   - [License](#license)
 
+
   #installation
   ${data.installation}
 
   #usage
   ${data.usage}
 
-  #credits
-  ${data.credits}
+  #collabs
+  ${data.collabs}
 
   ${licenseSection}
   ${licenseLink}
