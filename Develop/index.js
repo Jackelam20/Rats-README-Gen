@@ -1,56 +1,87 @@
-// TODO: Include packages needed for this application
 const inquirer = require("inquirer");
+const { generateMarkdown, fetchLicense, fetchLicenseNames } = require("./utils/generateMarkdown");
 const fs = require("fs");
 
-// TODO: Create an array of questions for user input
+// Fetch license names and generate questions for user input
+fetchLicenseNames()
+  .then((licenses) => {
+    const licenseChoices = licenses.concat(["None"]);
+    const questions = [
+      {
+        type: "input",
+        message: "What is your title?\n",
+        name: "title"
+      },
+      {
+        type: "input",
+        message: "What is your description?\n",
+        name: "description"
+      },
+      {
+        type: "input",
+        message: "How do you use it?\n",
+        name: "usage"
+      },
+      {
+        type: "input",
+        message: "What functions are in the project?\n",
+        name: "functions"
+      },
+      {
+        type: "input",
+        message: "Did anyone help you with this project?\n",
+        name: "collabs"
+      },
+      {type: "list",
+        message: "What license are you using?\n",
+        name: "license",
+        choices: licenseChoices
+      },
+      {
+        type: "input",
+        message: "What is your email?\n",
+        name: "questions"
+      },
+      {
+        type: "input",
+        message: "What is your username?\n",
+        name: "username"
+      }
+    ];
 
+    function writeToFile(fileName, data) {
+      fs.writeFile(fileName, data, (error) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("README file has been created");
+        }
+      });
+    }
 
-const questions = [{
-  type: "input",
-  message:`Title:
-"What would you like to title your readme?\n`,
-  name: "title",
-},{
-  type: "input",
-  message:`Title:
-"What is your descption?\n`,
-  name: "Decsription",
-},{
-  type: "input",
-  message:`Title:
-"How do you use it?\n`,
-  name: "Usage",
-},{
-  type: "input",
-  message:`Title:
-"What function are in the project?\n`,
-  name: "Funtctions",
-},{
-  type: "input",
-  message:`Title:
-"Did anyone help you with this project?\n`,
-  name: "colabs",
-}];
+    function init() {
+      inquirer.prompt(questions).then((answers) => {
+        console.log("answers:", answers);
+        fetchLicense(answers.license)
+          .then((licenseData) => {
+            console.log("License Data:", licenseData);
+            answers.licenseData = licenseData;
+            return generateMarkdown(answers);
+          })
+          .then((markdown) => {
+            writeToFile("README.md", markdown);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+    }
 
-
-// TODO: Create a function to write README file
-
-function writeToFile(fileName, data) {
-  fs.writeFile(fileName, data, (err) => {
-    if (err) throw err;
-    console.log("The file has been saved!");
+    // Function call to initialize app
+    init();
+  })
+  .catch((error) => {
+    console.error("Error fetching license names:", error);
   });
- }
- 
 
-// TODO: Create a function to initialize app
-function init() {
-  inquirer.prompt(questions).then((answers) => {
-    console.log(answers);
-  });
-
-}
-
-// Function call to initialize app
-init(writeToFile);
 
